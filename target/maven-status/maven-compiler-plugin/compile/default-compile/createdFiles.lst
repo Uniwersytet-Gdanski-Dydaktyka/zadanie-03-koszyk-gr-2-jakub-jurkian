@@ -1,0 +1,7 @@
+Product.class
+Promotion.class
+ValueBasedDiscountPromotion.class
+BuyTwoGetOneFreePromotion.class
+PercentageDiscountPromotion.class
+Cart.class
+CouponPromotion.class

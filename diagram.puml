@@ -1,0 +1,80 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class Product {
+    - code : String
+    - name : String
+    - price : double
+    - discountPrice : double
+    + getCode() : String
+    + getName() : String
+    + getPrice() : double
+    + getDiscountPrice() : double
+    + withDiscountPrice(double) : Product
+    + {static} byPrice() : Comparator<Product>
+    + {static} byName() : Comparator<Product>
+}
+
+interface Promotion {
+    + apply(Cart) : boolean
+}
+
+class BuyTwoGetOneFreePromotion {
+    + apply(Cart) : boolean
+}
+
+class CouponPromotion {
+    - targetProductCode : String
+    - discountPercentage : double
+    + apply(Cart) : boolean
+}
+
+class PercentageDiscountPromotion {
+    - percentage : double
+    + apply(Cart) : boolean
+}
+
+class ValueBasedDiscountPromotion {
+    - threshold : double
+    - percentage : double
+    + apply(Cart) : boolean
+}
+
+class Cart {
+    - products : List<Product>
+    - promotions : List<Promotion>
+    - currentComparator : Comparator<Product>
+    + addProduct(Product) : void
+    + replaceProduct(int, Product) : void
+    + getProducts() : List<Product>
+    + getSize() : int
+    + calculateTotal() : double
+    + calculateOriginalTotal() : double
+    + findCheapest() : Product
+    + findMostExpensive() : Product
+    + findNCheapest(int) : List<Product>
+    + findNMostExpensive(int) : List<Product>
+    + findNProductsWithComparator(int, Comparator) : List<Product>
+    + sort(Comparator<Product>) : void
+    + addPromotion(Promotion) : void
+    + removePromotion(Promotion) : void
+    + applyAllPromotions() : void
+}
+
+BuyTwoGetOneFreePromotion    ..|> Promotion
+CouponPromotion              ..|> Promotion
+PercentageDiscountPromotion  ..|> Promotion
+ValueBasedDiscountPromotion  ..|> Promotion
+
+Cart "1" *-- "0..*" Product     : contains >
+Cart "1" *-- "0..*" Promotion   : manages >
+Promotion ..> Cart              : uses >
+
+note on link
+  Strategy Pattern:
+  each Promotion is an
+  interchangeable algorithm
+end note
+
+@enduml
